@@ -215,8 +215,8 @@ def is_always_roll(strategy, goal=GOAL):
     """
     # BEGIN PROBLEM 7
     first = strategy(0, 0)
-    for m in range(0, 100):
-        for n in range(0, 100):
+    for m in range(0, goal):
+        for n in range(0, goal):
             current = strategy(m, n)
             if current != first:
                 return False
@@ -236,7 +236,13 @@ def make_averaged(original_function, samples_count=1000):
     3.0
     """
     # BEGIN PROBLEM 8
-    "*** YOUR CODE HERE ***"
+    def call_counts_num(*args):
+        sum_result, current_count = 0, 0
+        while current_count < samples_count:
+            sum_result += original_function(*args)
+            current_count += 1
+        return sum_result / samples_count
+    return call_counts_num
     # END PROBLEM 8
 
 
@@ -250,7 +256,14 @@ def max_scoring_num_rolls(dice=six_sided, samples_count=1000):
     1
     """
     # BEGIN PROBLEM 9
-    "*** YOUR CODE HERE ***"
+    max_dice, temp_dice, max_result = 0, 1, 0
+    while temp_dice <= 10:
+        temp_result = make_averaged(roll_dice, samples_count)(temp_dice, dice)
+        if temp_result > max_result:
+            max_result = temp_result
+            max_dice = temp_dice
+        temp_dice += 1
+    return max_dice
     # END PROBLEM 9
 
 
@@ -295,14 +308,16 @@ def boar_strategy(score, opponent_score, threshold=11, num_rolls=6):
     points, and returns NUM_ROLLS otherwise. Ignore score and Sus Fuss.
     """
     # BEGIN PROBLEM 10
-    return num_rolls  # Remove this line once implemented.
+    boar_score = boar_brawl(score, opponent_score)
+    return 0 if boar_score >= threshold else num_rolls
     # END PROBLEM 10
 
 
 def sus_strategy(score, opponent_score, threshold=11, num_rolls=6):
     """This strategy returns 0 dice when your score would increase by at least threshold."""
     # BEGIN PROBLEM 11
-    return num_rolls  # Remove this line once implemented.
+    sus_score = sus_update(0, score, opponent_score) - score
+    return 0 if sus_score >= threshold else num_rolls
     # END PROBLEM 11
 
 
